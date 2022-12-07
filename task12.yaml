@@ -31,12 +31,12 @@
 
    - name: run docker container
      shell:
-       cmd: docker run -itd --rm --name task12 -p 9090:80 -v task12:/var/www/html task12
+       cmd: docker run -itd --rm --name task12 -p 7070:80 -v task12:/var/www/html task12
 
 
    - name: check url
      uri:
-       url: http://localhost:9090
+       url: http://localhost:7070
      register: out
 
    - name: display result
