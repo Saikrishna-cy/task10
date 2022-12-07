@@ -1,9 +1,9 @@
 ---
  - name: playbook
-   hosts: 192.168.56.105
+   hosts: localhost
    gather_facts: false
    vars:
-       git_repo: https://git.netcracker.com/samu0922/task9.git
+       git_repo: https://github.com/Saikrishna-cy/task10.git
        git_branch: task12
 
     tasks:
@@ -28,7 +28,7 @@
     
       - name: check url
         uri:
-          url: http://192.168.56.105:4040
+          url: http://localhost:7070
         register: output
 
       - name: display result
