@@ -1,0 +1,37 @@
+---
+ - name: playbook
+   hosts: 192.168.56.105
+   gather_facts: false
+   vars:
+       git_repo: https://git.netcracker.com/samu0922/task9.git
+       git_branch: task12
+
+    tasks:
+    - block:
+      - name: Build Docker image from dockerfile
+        shell:
+          cmd: docker uild -t task12 .
+          chdir: "{{ workspace }}"
+      
+      - name: stop if any running container
+        shell:
+          cmd: docker rm -f task12
+
+        ignore_errors: true
+      
+
+      - name: launch webserver container
+        shell:
+          cmd: docker run -itd --rm -name task12 -p 4040:80 -v dummy2:/var/www/html/ task12  
+
+
+    
+      - name: check url
+        uri:
+          url: http://192.168.56.105:4040
+        register: output
+
+      - name: display result
+        debug:
+          msg: the webpage is up and running
+        when: output.status == 200
