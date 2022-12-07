@@ -1,37 +1,45 @@
 ---
- - name: playbook
-   hosts: localhost
-   gather_facts: false
-   vars:
-       git_repo: https://github.com/Saikrishna-cy/task10.git
-       git_branch: task12
+ - hosts: localhost
+   tasks:
 
-    tasks:
-    - block:
-      - name: Build Docker image from dockerfile
-        shell:
-          cmd: docker uild -t task12 .
-          chdir: "{{ workspace }}"
-      
-      - name: stop if any running container
-        shell:
-          cmd: docker rm -f task12
+   - name: name the directory
+     shell:
+       cmd: pwd
+     register: out1
 
-        ignore_errors: true
-      
+   - name: display out1
+     debug:
+       msg: "{{ out1 }}"
 
-      - name: launch webserver container
-        shell:
-          cmd: docker run -itd --rm -name task12 -p 4040:80 -v dummy2:/var/www/html/ task12  
+   - name: list the directory
+     shell:
+       cmd: ls -lrt
+     register: out2
+
+   - name: display out2
+     debug:
+       msg: "{{ out2 }}"
+
+   - name: build docker image
+     shell:
+       cmd: docker build -t task12 .
+
+   - name: stop if container is already running
+     shell:
+       cmd: docker rm -f task12
+     ignore_errors: true
+
+   - name: run docker container
+     shell:
+       cmd: docker run -itd --rm --name task12 -p 7070:80 -v task12:/var/www/html task12
 
 
-    
-      - name: check url
-        uri:
-          url: http://localhost:7070
-        register: output
+   - name: check url
+     uri:
+       url: http://localhost:7070
+     register: out
 
-      - name: display result
-        debug:
-          msg: the webpage is up and running
-        when: output.status == 200
+   - name: display result
+     debug:
+        msg: th web page is up and running
+     when: out.status == 200
